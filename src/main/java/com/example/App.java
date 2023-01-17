@@ -16,29 +16,17 @@ public class App {
         try {
             Connection connection = DriverManager.getConnection(url, user, pass);
 
-            Statement statement = connection.createStatement();
+            // Statement statement = connection.createStatement();
 
-            String query = "select * from user";
-            ResultSet resultSet = statement.executeQuery(query);
+            // String query = "select * from user";
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM user", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ResultSet resultSet = statement.executeQuery();
 
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int colCount = metaData.getColumnCount();
+            Method.displayResultInTable(resultSet);
 
-            for (int i = 1; i <= colCount; i++) {
-                System.out.print(metaData.getColumnName(i) + "  ");
-            }
-            System.out.println("");
-            while (resultSet.next()) {
-                for (int j = 0; j < colCount; j++) {
-                    System.out.print(resultSet.getString(j + 1) + "   ");
-                }
-                System.out.println();
-            }
-
-            System.out.println(colCount);
             connection.close();
         } catch (Exception e) {
-            // TODO: handle exception
+            throw new RuntimeException(e);
         }
     }
 }
