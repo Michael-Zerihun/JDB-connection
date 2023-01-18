@@ -62,7 +62,6 @@ public class Method {
                 System.out.println(text);
                 System.out.println(tableFrame);
             }
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
