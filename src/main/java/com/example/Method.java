@@ -7,8 +7,7 @@ public class Method {
     public static String[][] resultSetToArray(ResultSet resultSet) {
         try {
             ResultSetMetaData metaData = resultSet.getMetaData();
-            // resultSet.beforeFirst();
-            boolean arrive = resultSet.last();
+            resultSet.last();
             int row = resultSet.getRow();
             int col = metaData.getColumnCount();
             String[][] arrayStrings = new String[row][col];
@@ -47,14 +46,24 @@ public class Method {
             String[][] arrayStrings = resultSetToArray(resultSet);
             int[] tableSize = longestColString(arrayStrings);
 
+            ResultSetMetaData metaData = resultSet.getMetaData();
+
             String tableFrame = "+-";
             for (int i : tableSize) {
                 tableFrame += "-".repeat(i + 2) + "-+";
             }
             resultSet.beforeFirst();
             System.out.println(tableFrame);
+            String header = "| ";
+            for (int i = 0; i < tableSize.length; i++) {
+                header += " " + metaData.getColumnName(i+1);
+                header += " ".repeat(tableSize[i] - metaData.getColumnName(i+1).length() +1) + " |";
+            }
+            System.out.println(header);
+            System.out.println(tableFrame);
             while (resultSet.next()) {
                 String text = "| ";
+                
                 for (int index = 0; index < tableSize.length; index++) {
                     text += " " + resultSet.getString(index + 1);
                     text += " ".repeat(tableSize[index] - resultSet.getString(index + 1).length() + 1) + " |";
